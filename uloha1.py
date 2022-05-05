@@ -108,12 +108,14 @@ while True:
         roi = frame_gray[lx:ux, ly:uy]
         contours, _ = cv.findContours(roi, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         area = 0.0
+        area_list = []
         for contour in contours:
-            area = cv.contourArea(contour)
+            area_list.append(cv.contourArea(contour))
 
-        # r_width_px = abs(lx - ux)
+        if len(area_list) > 0:
+            area = max(area_list)
+
         if len(moving_trajectories) > 1:
-            # string = str(r_width_px)
             if len(values) == 10:
                 for i in range(len(values) - 1):
                     values[i] = values[i + 1]
@@ -135,7 +137,7 @@ while True:
             else:
                 tmp = power_diff_aproximator(abs(values[-1] - values[0]))
                 if tmp != 0:
-                    results.append(power_diff_aproximator(abs(values[-1] - values[0])))
+                    results.append(tmp)
                 continue
 
             if frame_idx % 10 == 0:
